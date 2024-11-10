@@ -883,6 +883,144 @@ def __(pd):
     return (drugs,)
 
 
+@app.cell(hide_code=True)
+def __(mo):
+    mo.md(
+        """
+        To display this sort of data, you need to tell `geom_bar()` to not run the default stat which bins and counts the data.
+        However, we think it's even better to use `geom_point()` because points take up less space than bars, and don't require that the y axis includes 0.
+        """
+    )
+    return
+
+
+@app.cell
+def __(aes, drugs, geom_bar, geom_point, ggplot, pw):
+    (
+        pw.load_ggplot((ggplot(drugs, aes("drug", "effect")) + geom_bar(stat="identity"))) | 
+        pw.load_ggplot((ggplot(drugs, aes("drug", "effect")) + geom_point()))
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def __(mo):
+    mo.md(
+        r"""
+        ### Time series with line and path plots {#sec-line}
+
+        Line and path plots are typically used for time series data.
+        Line plots join the points from left to right, while path plots join them in the order that they appear in the dataset (in other words, a line plot is a path plot of the data sorted by x value).
+        Line plots usually have time on the x-axis, showing how a single variable has changed over time.
+        Path plots show how two variables have simultaneously changed over time, with time encoded in the way that observations are connected.
+
+        Because the year variable in the `mpg` dataset only has two values, we'll show some time series plots using the `economics` dataset, which contains economic data on the US measured over the last 40 years.
+        The figure below shows two plots of unemployment over time, both produced using `geom_line()`.
+        The first shows the unemployment rate while the second shows the median number of weeks unemployed.
+        We can already see some differences in these two variables, particularly in the last peak, where the unemployment percentage is lower than it was in the preceding peaks, but the length of unemployment is high.
+        \indexf{geom\_line} \indexf{geom\_path} \index{Data!economics@\texttt{economics}}
+
+        """
+    )
+    return
+
+
+@app.cell
+def __(economics):
+    economics
+    return
+
+
+@app.cell
+def __(aes, economics, geom_path, geom_point, ggplot, pd, pw):
+    economics['year'] = pd.to_datetime(economics['date']).dt.year
+    (
+        pw.load_ggplot(
+            ggplot(economics, aes("unemploy / pop", "uempmed"))
+            + geom_path()
+            + geom_point()
+        ) |
+        pw.load_ggplot(
+            ggplot(economics, aes("unemploy / pop", "uempmed"))
+            + geom_path(colour="grey")
+            + geom_point(aes(colour = "year"))
+        )
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def __(mo):
+    mo.md(
+        """
+        We can see that unemployment rate and length of unemployment are highly correlated, but in recent years the length of unemployment has been increasing relative to the unemployment rate.
+
+        With longitudinal data, you often want to display multiple time series on each plot, each series representing one individual.
+        To do this you need to map the `group` aesthetic to a variable encoding the group membership of each observation.
+        This is explained in more depth in @sec-collective-geoms.
+        \index{Longitudinal data|see{Data, longitudinal}} \index{Data!longitudinal}
+        """
+    )
+    return
+
+
+@app.cell(hide_code=True)
+def __(mo):
+    mo.md(
+        """
+        ### Exercises
+
+        1.  What's the problem with the plot created by `ggplot(mpg, aes(cty, hwy)) + geom_point()`?
+            Which of the geoms described above is most effective at remedying the problem?
+
+        2.  One challenge with `ggplot(mpg, aes(class, hwy)) + geom_boxplot()` is that the ordering of `class` is alphabetical, which is not terribly useful.
+            How could you change the factor levels to be more informative?
+
+            Rather than reordering the factor by hand, you can do it automatically based on the data: `ggplot(mpg, aes(reorder(class, hwy), hwy)) + geom_boxplot()`.
+            What does `reorder()` do?
+            Read the documentation.
+
+        3.  Explore the distribution of the carat variable in the `diamonds` dataset.
+            What binwidth reveals the most interesting patterns?
+
+        4.  Explore the distribution of the price variable in the `diamonds` data.
+            How does the distribution vary by cut?
+
+        5.  You now know (at least) three ways to compare the distributions of subgroups: `geom_violin()`, `geom_freqpoly()` and the colour aesthetic, or `geom_histogram()` and faceting.
+            What are the strengths and weaknesses of each approach?
+            What other approaches could you try?
+
+        6.  Read the documentation for `geom_bar()`.
+            What does the `weight` aesthetic do?
+
+        7.  Using the techniques already discussed in this chapter, come up with three ways to visualise a 2d categorical distribution.
+            Try them out by visualising the distribution of `model` and `manufacturer`, `trans` and `class`, and `cyl` and `trans`.
+        """
+    )
+    return
+
+
+@app.cell
+def __(mo):
+    mo.md(
+        """
+        #### 1
+
+        problem: overlapping data points?
+        """
+    )
+    return
+
+
+@app.cell
+def __(aes, geom_jitter, geom_point, ggplot, mpg, pw):
+    (
+        pw.load_ggplot(ggplot(mpg, aes("cty", "hwy")) + geom_point())
+        | pw.load_ggplot(ggplot(mpg, aes("cty", "hwy")) + geom_point() + geom_jitter())
+    )
+    return
+
+
 @app.cell
 def __():
     return
