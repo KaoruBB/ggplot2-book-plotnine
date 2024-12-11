@@ -919,7 +919,6 @@ def __(mo):
         The first shows the unemployment rate while the second shows the median number of weeks unemployed.
         We can already see some differences in these two variables, particularly in the last peak, where the unemployment percentage is lower than it was in the preceding peaks, but the length of unemployment is high.
         \indexf{geom\_line} \indexf{geom\_path} \index{Data!economics@\texttt{economics}}
-
         """
     )
     return
@@ -1002,18 +1001,14 @@ def __(mo):
 
 @app.cell
 def __(mo):
-    mo.md(
-        """
-        #### 1
-
-        problem: overlapping data points?
-        """
-    )
+    mo.md(""" """)
     return
 
 
 @app.cell
 def __(aes, geom_jitter, geom_point, ggplot, mpg, pw):
+    # 1
+    # problem: overlapping data points?
     (
         pw.load_ggplot(ggplot(mpg, aes("cty", "hwy")) + geom_point())
         | pw.load_ggplot(ggplot(mpg, aes("cty", "hwy")) + geom_point() + geom_jitter())
@@ -1023,6 +1018,15 @@ def __(aes, geom_jitter, geom_point, ggplot, mpg, pw):
 
 @app.cell
 def __():
+    return
+
+
+@app.cell
+def __(aes, geom_boxplot, ggplot, mpg):
+
+    (
+        ggplot(mpg, aes("class", "hwy")) + geom_boxplot()
+    )
     return
 
 
